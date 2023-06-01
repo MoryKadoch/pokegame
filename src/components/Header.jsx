@@ -1,4 +1,3 @@
-// header with material-ui
 import { AppBar, Toolbar, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import logo from '../assets/Pokédex_logo.png'

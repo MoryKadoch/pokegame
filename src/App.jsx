@@ -4,6 +4,7 @@ import SinglePokemon from './components/SinglePokemon'
 import Favorites from './components/Favorites'
 
 import Header from "./components/Header"
+import Footer from "./components/Footer"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/favorites" element={<Favorites />} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
