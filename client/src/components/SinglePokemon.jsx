@@ -7,6 +7,7 @@ import PokemonCard from './PokemonCard'
 import AbilitiesCard from './AbilitiesCard'
 import StatsCard from './StatsCard'
 import MovesCard from './MovesCard'
+import moves_data from './Battle/Data/moves_data.js'
 
 const SinglePokemon = () => {
     const name = useParams().name;
@@ -47,9 +48,30 @@ const SinglePokemon = () => {
             return
         }
 
-        const newFavoriteList = [...JSON.parse(localStorage.getItem('favorites')), { name: pokemon.name, id: pokemon.id }]
+        const moves = pokemon.moves.map((move) => {
+            return { id: move.move.url.split('/')[6], name: move.move.name, chosen: false }
+        })
+
+        // If moves are not in the moves_data, remove them from the moves array
+        const newMoves = []
+        moves.forEach((move, index) => {
+            if (moves_data[move.id] === undefined) {
+                console.log(`Move ${move.name} is not in the moves_data`)
+                return
+            }
+            newMoves.push(move)
+        })
+
+        // First 4 moves are chosen true
+        newMoves.forEach((move, index) => {
+            if (index < 4) {
+                move.chosen = true
+            }
+        })
+
+        const newFavoriteList = [...JSON.parse(localStorage.getItem('favorites')), { name: pokemon.name, id: pokemon.id, moves: newMoves }]
         localStorage.setItem('favorites', JSON.stringify(newFavoriteList))
-        e.target.innerHTML = 'Added to Favorites'
+        e.target.innerHTML = 'Added to favorites!'
     }
 
 

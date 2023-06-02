@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
-import { Grid, Card, CardMedia, CardContent, Typography, Chip, CardActions, Button, CircularProgress } from "@material-ui/core";
+import { Grid, Card, CardMedia, CardContent, Typography, Chip, CardActions, Button, CircularProgress, Checkbox, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText } from "@material-ui/core";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from "react-router-dom";
 
 const Favorites = () => {
     const [favorites, setFavorites] = useState([])
     const [loading, setLoading] = useState(true)
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         const getFavorites = async () => {
@@ -25,6 +34,45 @@ const Favorites = () => {
         setFavorites(newFavoriteList)
     }
 
+    const handleMoveChange = (e, move, pokemon) => {
+        // if move is checked or unchecked update localstorage move chosen value
+        const newFavoriteList = JSON.parse(localStorage.getItem('favorites')).map((favorite) => {
+            if (favorite.id === pokemon.id) {
+                // if there is aleady 4 moves chosen, alert user and return
+                const chosenMoves = favorite.moves.filter((move) => move.chosen)
+                if (chosenMoves.length === 4 && !move.chosen) {
+                    alert('You can only choose 4 moves!')
+                    return favorite
+                }
+                const newMoves = favorite.moves.map((favoriteMove) => {
+                    if (move.id === favoriteMove.id) {
+                        favoriteMove.chosen = !favoriteMove.chosen
+                    }
+                    return favoriteMove
+                })
+                favorite.moves = newMoves
+            }
+            return favorite
+        })
+        localStorage.setItem('favorites', JSON.stringify(newFavoriteList))
+        setFavorites(newFavoriteList)
+    }
+
+    if (favorites.length === 0 && !loading) {
+        return (
+            <Grid container spacing={2} style={{ padding: "24px", height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Grid item xs={12} style={{ textAlign: 'center' }}>
+                    <Typography variant="h4">
+                        Your team is empty, browse the Pokédex to add Pokémon to your team!
+                    </Typography>
+                    <Button variant="contained" color="primary" style={{ marginTop: '16px' }} component={Link} to="/" size="large">
+                        Go !
+                    </Button>
+                </Grid>
+            </Grid>
+        )
+    }
+
     return (
         <>
             {loading ? (
@@ -33,7 +81,9 @@ const Favorites = () => {
                 <>
                     <Grid container spacing={2} style={{ padding: "24px" }}>
                         <Grid item xs={12} style={{ textAlign: 'center' }}>
-                            <h1>My team</h1>
+                            <Typography variant="h4">
+                                Favorites
+                            </Typography>
                         </Grid>
                         {favorites.map((pokemon, i) => {
                             return (
@@ -43,7 +93,7 @@ const Favorites = () => {
                                             <CardMedia style={{ height: '250px', backgroundSize: 'contain' }} image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`} />
                                             <CardContent style={{ textAlign: 'center' }}>
                                                 <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                                    {pokemon.name}
+                                                    {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
                                                 </Typography>
                                             </CardContent>
                                         </Link>
@@ -51,6 +101,35 @@ const Favorites = () => {
                                             <Button variant="contained" color="secondary" startIcon={<FavoriteIcon />} onClick={(e) => handleRemoveFavorite(e, pokemon)}>
                                                 Remove from Favorites
                                             </Button>
+                                            {pokemon.moves.length > 0 && (
+                                                <div>
+                                                    <Button variant="contained" color="primary" onClick={handleClickOpen} style={{ marginLeft: '16px' }}>
+                                                        Choose Moves
+                                                    </Button>
+                                                    <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
+                                                        <DialogTitle>
+                                                            <Typography variant="h5" style={{ textAlign: 'center' }}>
+                                                                Choose 4 moves for {pokemon.name}
+                                                            </Typography>
+                                                        </DialogTitle>
+                                                        <DialogContent>
+                                                            <Grid container spacing={2}>
+                                                                {pokemon.moves.map((move, i) => (
+                                                                    <Grid item xs={12} sm={6} md={4} key={i}>
+                                                                        <Checkbox
+                                                                            value={move.name}
+                                                                            {...(move.chosen ? { checked: true } : { checked: false })}
+                                                                            onChange={(e) => handleMoveChange(e, move, pokemon)}
+                                                                        />
+                                                                        <ListItemText primary={move.name} />
+                                                                    </Grid>
+                                                                ))}
+                                                            </Grid>
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                </div>
+                                            )}
+
                                         </CardActions>
                                     </Card>
                                 </Grid>

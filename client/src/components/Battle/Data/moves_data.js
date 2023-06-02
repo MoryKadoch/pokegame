@@ -2422,3 +2422,5 @@ const moves_data = [
         "is_first": false
     }
 ]
+
+export default moves_data;

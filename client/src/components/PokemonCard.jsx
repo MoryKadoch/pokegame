@@ -23,6 +23,8 @@ const PokemonCard = ({ pokemonData, handleFavorite }) => {
         flying: '#3dc7ef',
         ice: '#51c4e7'
     }
+
+    const cry = new Audio(`https://play.pokemonshowdown.com/audio/cries/${pokemonData.name.replace('-', '')}.mp3`)
     
     return (
         <Card style={{ height: '100%' }}>
@@ -49,6 +51,7 @@ const PokemonCard = ({ pokemonData, handleFavorite }) => {
                 <Button variant="contained" color="primary" startIcon={<FavoriteIcon />} onClick={(e) => handleFavorite(e, pokemonData)}>
                    { JSON.parse(localStorage.getItem("favorites")) !== null && JSON.parse(localStorage.getItem("favorites")).includes(pokemonData.name) ? 'Added to Favorites' : 'Add to Favorites'}
                 </Button>
+                <Button variant="contained" color="secondary" onClick={() => cry.play()}>Listen to Cry</Button>
             </CardActions>
         </Card>
     )

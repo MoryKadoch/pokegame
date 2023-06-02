@@ -1,83 +1,41 @@
-﻿import CustomText from "../CustomText";
-
-import React, { useState } from 'react';
-import { Grid, Card, CardMedia, CardContent, Typography, Button, TextField } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+﻿import { useState } from 'react';
+import { Grid, Card, CardContent, Typography, Button, TextField, CardActions, Box } from '@material-ui/core';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
 
     const login = () => {
         if (username) {
-            // La logique de navigation doit être implémentée selon la bibliothèque de navigation utilisée en React JS (par exemple, react-router)
-            // this.props.navigation.navigate("TeamSelect", {
-            // username
-            // });
+            // TODO: Implement navigation logic
         }
     };
 
     return (
-        <Grid container spacing={2} style={styles.container}>
-            <Grid item xs={12} style={styles.top}>
-                {/*<CardMedia component="img" src={require('../assets/images/pokemon/pikachu.gif')} />*/}
-                <Typography variant="h4" style={styles.headerText}>
-                    Pokémon Battles
-                </Typography>
-            </Grid>
-            <Grid item xs={12} style={styles.main}>
-                <Typography variant="h6" style={styles.label}>
-                    Enter username
-                </Typography>
-                <TextField
-                    style={styles.textInput}
-                    variant="outlined"
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                />
-                <Button variant="contained" color="primary" onClick={login} style={styles.button}>
-                    Sign in
-                </Button>
+        <Grid container spacing={2} style={{ padding: '24px', height: '80vh' }}>
+            <Grid item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box style={{ width: '100%', maxWidth: 600, textAlign: 'center' }}>
+                    <Typography variant="h4" component="h2">
+                        Login to play
+                    </Typography>
+                    <Box display="flex" justifyContent="center" width="100%" marginBottom={2} style={{ padding: '0 16px' }}>
+                        <TextField
+                            id="username"
+                            label="Username"
+                            variant="outlined"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            style={{ marginTop: 16, marginBottom: 16, width: '100%' }}
+                        />
+                        <Button onClick={login} variant="contained" color="primary" style={{ width: '100%' }} size="large">
+                            Login
+                        </Button>
+                    </Box>
+                </Box>
             </Grid>
         </Grid>
     );
-};
 
-const styles = {
-    container: {
-        padding: 20,
-        backgroundColor: '#FFF',
-    },
-    top: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    headerText: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginTop: 10,
-    },
-    main: {
-        justifyContent: 'flex-start',
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 10,
-    },
-    textInput: {
-        height: 40,
-        marginTop: 5,
-        marginBottom: 10,
-        backgroundColor: '#eaeaea',
-        padding: 5,
-    },
-    button: {
-        alignSelf: 'center',
-        marginTop: 10,
-    },
+
 };
 
 export default LoginScreen;
-
-
