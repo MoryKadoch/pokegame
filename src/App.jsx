@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Pokedex from './components/Pokedex'
 import SinglePokemon from './components/SinglePokemon'
 import Favorites from './components/Favorites'
+//import Play from './components/Play'
 
 import Header from "./components/Header"
 import Footer from "./components/Footer"
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Pokedex />} />
         <Route path="/pokemon/:name" element={<SinglePokemon />} />
         <Route path="/favorites" element={<Favorites />} />
+        {/*<Route path="/play" element={<Play />} />*/}
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
       <Footer />

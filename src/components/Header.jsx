@@ -15,6 +15,9 @@ const Header = () => {
                     <Link to="/favorites" style={{ color: 'white', textDecoration: 'none', marginLeft: '16px' }}>
                         My team
                     </Link>
+                    <Link to="/play" style={{ color: 'white', textDecoration: 'none', marginLeft: '16px' }}>
+                        Play
+                    </Link>
                 </Typography>
             </Toolbar>
         </AppBar>
