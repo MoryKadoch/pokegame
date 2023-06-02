@@ -1,32 +1,33 @@
-import React from "react";
-import { View } from "react-native";
-import CustomText from "../CustomText";
+import React from 'react';
+import { Typography, Grid } from '@material-ui/core';
 
 const HealthBar = ({ label, currentHealth, totalHealth }) => {
     let percent = (currentHealth / totalHealth) * 100;
     let healthColor =
         percent <= 15
-            ? "healthCritical"
+            ? 'healthCritical'
             : percent <= 45
-                ? "healthWarning"
-                : "healthOK";
+                ? 'healthWarning'
+                : 'healthOK';
 
     let progressColor = styles[healthColor];
 
     return (
-        <View>
-            <CustomText styles={styles.label}>{label}</CustomText>
-            <View style={styles.container}>
-                <View style={styles.rail}>
-                    <View style={[styles.progress, progressColor, { width: percent }]} />
-                </View>
-                <View style={styles.percent}>
-                    <CustomText styles={styles.percentText}>
-                        {parseInt(percent)}%
-                    </CustomText>
-                </View>
-            </View>
-        </View>
+        <Grid container direction="column" alignItems="flex-start" spacing={1}>
+            <Grid item>
+                <Typography style={styles.label}>{label}</Typography>
+            </Grid>
+            <Grid item>
+                <div style={styles.container}>
+                    <div style={styles.rail}>
+                        <div style={{ ...styles.progress, ...progressColor, width: percent + '%' }} />
+                    </div>
+                    <div style={styles.percent}>
+                        <Typography style={styles.percentText}>{parseInt(percent)}%</Typography>
+                    </div>
+                </div>
+            </Grid>
+        </Grid>
     );
 };
 
@@ -35,38 +36,38 @@ const styles = {
         height: 10,
         width: 130,
         marginBottom: 15,
-        flexDirection: "row"
+        display: 'flex',
+        flexDirection: 'row',
     },
     label: {
         paddingBottom: 2,
-        color: "#212121"
+        color: '#212121',
     },
     rail: {
         height: 10,
         width: 100,
-        borderWidth: 1,
+        border: '1px solid #616161',
         borderRadius: 3,
-        borderColor: "#616161"
     },
     progress: {
-        height: 8
+        height: 8,
     },
     healthOK: {
-        backgroundColor: "#5db56d"
+        backgroundColor: '#5db56d',
     },
     healthWarning: {
-        backgroundColor: "#fcc419"
+        backgroundColor: '#fcc419',
     },
     healthCritical: {
-        backgroundColor: "#fa5252"
+        backgroundColor: '#fa5252',
     },
     percent: {
-        paddingLeft: 3
+        paddingLeft: 3,
     },
     percentText: {
         fontSize: 10,
-        color: "#212121"
-    }
+        color: '#212121',
+    },
 };
 
 export default HealthBar;
