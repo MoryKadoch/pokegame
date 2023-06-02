@@ -1,14 +1,12 @@
 import React from "react";
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Button, Text } from "react-native-elements";
+import { connect } from "react-redux";
+
+import { setTeam, setPokemon } from "../actions";
+import moves_data from "../data/moves_data";
 
 import CustomText from "../components/CustomText";
 import PokemonList from "../components/PokemonList";
 import ActionList from "../components/ActionList";
-
-// todo: import Redux packages
-// todo: import actions
-// todo: import helper functions
 
 import uniqid from "../helpers/uniqid";
 import shuffleArray from "../helpers/shuffleArray";
@@ -25,25 +23,41 @@ const TeamSelectionScreen = ({ selected_pokemon, setTeam, setCurrentPokemon }) =
     };
 
     return (
-        <View style={styles.container}>
+        <div style={styles.container}>
             <CustomText>Team Selection Screen</CustomText>
-        </View>
+        </div>
     );
 };
 
-// todo: add mapStateToProps (current pokemon, selected pokemon)
+const mapStateToProps = ({ team_selection }) => {
+    const { pokemon, selected_pokemon } = team_selection;
 
-// todo: add mapDispatchToProps (set team, set current pokemon)
+    // return pokemon and selected_pokemon as props for this component
+    return {
+        pokemon, // all the Pokemon available for selection (a copy of src/data/pokemon_data.js)
+        selected_pokemon // array of selected Pokemon
+    };
+};
 
-export default TeamSelectionScreen; // todo: turn component into a connected component
+const mapDispatchToProps = dispatch => {
+    // for updating the value of team and pokemon in src/reducers/BattleReducer.js
+    return {
+        setTeam: team => {
+            dispatch(setTeam(team));
+        },
+        setPokemon: pokemon => {
+            dispatch(setPokemon(pokemon));
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TeamSelectionScreen);
 
 const styles = {
     container: {
         flex: 1,
-        // todo: remove on part 1
         alignItems: "center",
         justifyContent: "center",
-        // end remove
     },
     headerText: {
         fontSize: 20,
