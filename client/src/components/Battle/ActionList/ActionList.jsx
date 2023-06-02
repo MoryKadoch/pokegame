@@ -1,54 +1,55 @@
-import React from "react";
-import { TouchableOpacity, FlatList } from "react-native";
-import CustomText from "../CustomText";
+import React from 'react';
+import { Typography, Grid, Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 
 const ActionList = ({ setMove }) => {
+    const dispatch = useDispatch();
+
     const data = [
         {
-            label: "Fight",
+            label: 'Fight',
             action: () => {
-                setMove("select-pokemon-move");
-                // todo: add code for dispatching action to select Pokemon move
-            }
+                setMove('select-pokemon-move');
+                // Todo: add code for dispatching action to select Pokemon move
+            },
         },
         {
-            label: "Switch",
+            label: 'Switch',
             action: () => {
-                setMove("select-pokemon");
-                // todo: add code for dispatching action to switch Pokemon
-            }
-        }
+                setMove('select-pokemon');
+                // Todo: add code for dispatching action to switch Pokemon
+            },
+        },
     ];
 
     return (
-        <FlatList
-            data={data}
-            numColumns={2}
-            scrollEnabled={false}
-            keyExtractor={(item, index) => item.id}
-            renderItem={({ item }) => (
-                <TouchableOpacity style={styles.container} onPress={item.action}>
-                    <CustomText styles={styles.label}>{item.label}</CustomText>
-                </TouchableOpacity>
-            )}
-        />
+        <Grid container spacing={2}>
+            {data.map((item, index) => (
+                <Grid item xs={6} key={index}>
+                    <Button variant="contained" color="primary" onClick={item.action} style={styles.container}>
+                        <Typography variant="h6" style={styles.label}>
+                            {item.label}
+                        </Typography>
+                    </Button>
+                </Grid>
+            ))}
+        </Grid>
     );
 };
 
 const styles = {
     container: {
-        marginLeft: 10,
-        marginRight: 10,
-        backgroundColor: "#ffd43b",
-        padding: 20
+        backgroundColor: '#ffd43b',
+        padding: 20,
+        width: '100%',
     },
     label: {
-        fontSize: 20
-    }
+        fontSize: 20,
+    },
 };
 
-// todo: add mapStateToProps (team)
+// Todo: add mapStateToProps (team)
 
-// todo: add mapDispatchToProps (setMove)
+// Todo: add mapDispatchToProps (setMove)
 
-export default ActionList; // todo: convert component into a connected component
+export default ActionList; // Todo: convert component into a connected component

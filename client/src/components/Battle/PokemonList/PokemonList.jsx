@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { Grid } from "@material-ui/core";
 import CustomText from "../CustomText";
 
 import PokemonOption from "../PokemonOption";
@@ -12,21 +12,18 @@ const PokemonList = ({
     opponents_channel
 }) => {
     return (
-        <FlatList
-            data={data}
-            numColumns={numColumns}
-            scrollEnabled={scrollEnabled}
-            contentContainerStyle={{ alignItems: "stretch", backgroundColor: "#fff" }}
-            keyExtractor={(item, index) => item.id.toString()}
-            renderItem={({ item }) => (
-                <PokemonOption
-                    pokemon_data={item}
-                    is_selected={item.is_selected}
-                    action_type={action_type}
-                    opponents_channel={opponents_channel}
-                />
-            )}
-        />
+        <Grid container spacing={2}>
+            {data.map((item) => (
+                <Grid item xs={12 / numColumns} key={item.id}>
+                    <PokemonOption
+                        pokemon_data={item}
+                        is_selected={item.is_selected}
+                        action_type={action_type}
+                        opponents_channel={opponents_channel}
+                    />
+                </Grid>
+            ))}
+        </Grid>
     );
 };
 

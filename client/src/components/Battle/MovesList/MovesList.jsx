@@ -1,37 +1,36 @@
-import React from "react";
-import { TouchableOpacity, FlatList } from "react-native";
-import CustomText from "../CustomText";
-
-// todo: import Redux packages
-// todo: import actions
-// todo: import helper functions
+import React from 'react';
+import { connect } from 'react-redux';
+import { Typography, Grid } from '@material-ui/core';
+import { setOpponentPokemonHealth, removePokemonFromOpponentTeam, setOpponentPokemon, setMessage, setMove } from '../actions';
+import CustomText from '../CustomText';
 
 const MovesList = ({
-    moves
-    // access props that were set using mapStateToProps
+    moves,
+    setOpponentPokemonHealth,
+    removePokemonFromOpponentTeam,
+    setOpponentPokemon,
+    setMessage,
+    setMove,
 }) => {
+    const handleMovePress = (item) => {
+        /*
+        todo:
+        - dispatch action for setting message to display in the message box
+        - dispatch action for updating the health of the opponent's current Pokemon
+        - if opponent Pokemon's health goes below 1, dispatch action for removing opponent's current Pokemon from their team
+        */
+    };
+
     return (
-        <FlatList
-            data={moves}
-            numColumns={2}
-            scrollEnabled={false}
-            keyExtractor={(item, index) => item.id.toString()}
-            renderItem={({ item }) => (
-                <TouchableOpacity
-                    style={styles.container}
-                    onPress={() => {
-                        /*
-                        todo:
-                        - dispatch action for setting message to display in the message box
-                        - dispatch action for updating the health of the opponent's current Pokemon
-                        - if opponent Pokemon's health goes below 1, dispatch action for removing opponent's current Pokemon from their team
-                        */
-                    }}
-                >
-                    <CustomText styles={styles.label}>{item.title}</CustomText>
-                </TouchableOpacity>
-            )}
-        />
+        <Grid container spacing={1}>
+            {moves.map((item) => (
+                <Grid item key={item.id} xs={6}>
+                    <TouchableOpacity style={styles.container} onPress={() => handleMovePress(item)}>
+                        <CustomText styles={styles.label}>{item.title}</CustomText>
+                    </TouchableOpacity>
+                </Grid>
+            ))}
+        </Grid>
     );
 };
 
@@ -40,27 +39,31 @@ const styles = {
         width: 130,
         marginLeft: 5,
         marginRight: 5,
-        alignItems: "center",
+        alignItems: 'center',
         padding: 5,
         paddingTop: 10,
         paddingBottom: 10,
-        backgroundColor: "#ffd43b",
-        marginBottom: 10
+        backgroundColor: '#ffd43b',
+        marginBottom: 10,
     },
     label: {
-        fontSize: 14
-    }
+        fontSize: 14,
+    },
 };
 
-// todo: add mapStateToProps (opponent_team, pokemon, opponent_pokemon)
+const mapStateToProps = (state) => ({
+    moves: state.moves,
+    opponent_team: state.opponent_team,
+    pokemon: state.pokemon,
+    opponent_pokemon: state.opponent_pokemon,
+});
 
-/*
-todo: add mapDispatchToProps:
-  - setOpponentPokemonHealth
-  - removePokemonFromOpponentTeam
-  - setOpponentPokemon
-  - setMessage
-  - setMove
-*/
+const mapDispatchToProps = {
+    setOpponentPokemonHealth,
+    removePokemonFromOpponentTeam,
+    setOpponentPokemon,
+    setMessage,
+    setMove,
+};
 
-export default MovesList; // todo: convert the component into a connected component
+export default connect(mapStateToProps, mapDispatchToProps)(MovesList);
