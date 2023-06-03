@@ -11889,3 +11889,5 @@ const pokemon_data = [
         }
     }
 ]
+
+export default pokemon_data;

@@ -5,8 +5,12 @@ import Favorites from './components/Favorites'
 import LoginScreen from './components/Battle/Screens/LoginScreen'
 //import Play from './components/Play'
 
+
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+//import BattleScreen from './components/Battle/Screens/BattleScreen'
+//import { connect } from "react-redux";
+import Root from './components/Battle/Reducers/index'
 
 function App() {
     return (

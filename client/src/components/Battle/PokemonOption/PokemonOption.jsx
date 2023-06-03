@@ -3,10 +3,14 @@ import { Grid, Card, CardMedia, CardContent, Typography, IconButton } from "@mat
 import CustomText from "../CustomText";
 import { Entypo } from "@material-ui/icons";
 
+import { connect } from "react-redux";
+import { selectPokemon } from "../Actions";
+
+
 // todo: import Redux packages
 // todo: import actions
 
-const PokemonOption = ({ pokemon_data, is_selected, action_type }) => {
+const PokemonOption = ({ pokemon_data, is_selected, action_type, togglePokemon }) => {
     let compact = action_type === "select-pokemon" ? false : true;
     let marginTop = compact ? {} : { marginTop: 20 };
     let imageStyle = compact ? { width: 40 } : { width: 60 };
@@ -27,7 +31,11 @@ const PokemonOption = ({ pokemon_data, is_selected, action_type }) => {
                     <Typography variant="body1" style={{ textTransform: "capitalize" }}>
                         {label}
                     </Typography>
-                    <IconButton color={is_selected ? "primary" : "default"}>
+                    <IconButton color={is_selected ? "primary" : "default"} onPress={() => {
+                        if (action_type == "select-pokemon") {
+                            togglePokemon(id, pokemon_data, is_selected);
+                        }
+                    }}>
                         <Entypo name="check" />
                     </IconButton>
                 </Grid>
@@ -36,4 +44,12 @@ const PokemonOption = ({ pokemon_data, is_selected, action_type }) => {
     );
 };
 
-export default PokemonOption;
+const mapDispatchToProps = dispatch => {
+    return {
+        togglePokemon: (id, pokemon_data, is_selected) => {
+            dispatch(selectPokemon(id, pokemon_data, is_selected));
+        }
+    };
+};
+
+export default connect( null, mapDispatchToProps )(PokemonOption);

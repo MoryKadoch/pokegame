@@ -1,44 +1,69 @@
 import React, { useEffect } from "react";
 import { Box, Typography } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
 
-import CustomText from "../components/CustomText";
-import PokemonFullSprite from "../components/PokemonFullSprite";
-import HealthBar from "../components/HealthBar";
-import ActionList from "../components/ActionList";
-import MovesList from "../components/MovesList";
-import PokemonList from "../components/PokemonList";
+import { connect } from "react-redux";
+// Importez les autres composants et actions nécessaires
 
-// todo: import Pokemon and moves data
-
-// todo: import helper functions
-
-// todo: import actions
-
-const BattleScreen = () => {
+const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
     useEffect(() => {
-        /*
-        todo:
-        - extract navigation props
-        - extract props passed from mapStateToProps
-        - extract functions added via mapDispatchToProps
-    
-        - construct random opponent team data
-        - dispatch action to set opponent team
-        - dispatch action to set current opponent Pokemon
-        */
+        const random_pokemon_ids = [];
+        for (let x = 0; x <= 5; x++) {
+            random_pokemon_ids.push(randomInt(1, 54));
+        }
+
+        let opposing_team = pokemon_data.filter(item => {
+            return random_pokemon_ids.indexOf(item.id) !== -1;
+        });
+
+        opposing_team = opposing_team.map(item => {
+            let hp = 500;
+
+            let shuffled_moves = shuffleArray(item.moves);
+            let selected_moves = shuffled_moves.slice(0, 4);
+
+            let moves = moves_data.filter(item => {
+                return selected_moves.indexOf(item.id) !== -1;
+            });
+
+            let member_id = uniqid();
+
+            return {
+                ...item,
+                team_member_id: member_id,
+                current_hp: hp,
+                total_hp: hp,
+                moves: moves,
+                is_selected: false,
+            };
+        });
+
+        // Mettez à jour le store avec l'équipe adverse et le Pokémon adverse actuel
+        setOpponentTeam(opposing_team);
+        setOpponentPokemon(opposing_team[0]);
     }, []);
 
-    /*
-    todo:
-    - extract props passed using mapStateToProps, as well as navigation props
-    - render opponent's current Pokemon
-    - render current user's Pokemon
-    - selectively render currently displayed message (e.g. Pikachu used Thunder! It's super effective.)
-    - selectively render action buttons (fight or switch Pokemon)
-    - selectively render Pokemon list
-    - selectively render Pokemon moves list
-    */
+    const BattleScreen = ({
+        team,
+        move,
+        move_display_text,
+        pokemon,
+        opponent_pokemon,
+        backToMove
+    }) => {
+        return (
+            <div style={styles.container}>
+                <CustomText styles={[styles.headerText]}>Fight!</CustomText>
+
+                <div style={styles.battleGround}>
+                    {/* Code pour rendre l'interface utilisateur du Pokémon et du Pokémon adverse */}
+                </div>
+
+                <div style={styles.controls}>
+                    {/* Code pour ajouter l'interface utilisateur des contrôles de combat */}
+                </div>
+            </div>
+        );
+    };
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center">
@@ -47,28 +72,20 @@ const BattleScreen = () => {
     );
 };
 
-/*
-todo: add mapStateToProps
-  - team
-  - move
-  - move_display_text
-  - message
-  - pokemon
-  - opponent_team
-  - opponent_pokemon
-*/
+const mapDispatchToProps = dispatch => {
+    return {
+        backToMove: () => {
+            dispatch(setMove("select-move"));
+        },
+        setOpponentTeam: team => {
+            dispatch(setOpponentTeam(team));
+        },
+        setOpponentPokemon: pokemon => {
+            dispatch(setOpponentPokemon(pokemon));
+        }
+    };
+};
 
-/*
-todo: add mapDispatchToProps
+// Connectez le composant à Redux en utilisant connect()
 
-  - backToMove
-  - setOpponentTeam
-  - setOpponentPokemon
-  - setMessage
-  - setPokemonHealth
-  - setMove
-  - removePokemonFromTeam
-  - removePokemonFromOpposingTeam
-*/
-
-export default BattleScreen; // todo: turn component into a connected component
+export default connect(null, mapDispatchToProps)(BattleScreen);
