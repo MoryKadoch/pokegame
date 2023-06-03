@@ -2,7 +2,16 @@ import React, { useEffect } from "react";
 import { Box, Typography } from "@material-ui/core";
 
 import { connect } from "react-redux";
-// Importez les autres composants et actions nécessaires
+
+import pokemon_data from "../Data/pokemon_data.js";
+import moves_data from "../Data/moves_data";
+
+import uniqid from "../Helpers/uniqid";
+import randomInt from "../Helpers/randomInt";
+import shuffleArray from "../Helpers/shuffleArray";
+
+import { setOpponentTeam, setOpponentPokemon, setMove } from "../actions";
+
 
 const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
     useEffect(() => {
@@ -51,7 +60,9 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
         backToMove
     }) => {
         return (
+            
             <div style={styles.container}>
+                
                 <CustomText styles={[styles.headerText]}>Fight!</CustomText>
 
                 <div style={styles.battleGround}>

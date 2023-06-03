@@ -1,12 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 import { setTeam, setPokemon } from "../Actions";
 import moves_data from "../Data/moves_data";
+import pokemon_data from "../Data/pokemon_data";
 
-import CustomText from "../components/CustomText";
-import PokemonList from "../components/PokemonList";
-import ActionList from "../components/ActionList";
+import CustomText from "../CustomText";
+import PokemonList from "../PokemonList";
+import ActionList from "../ActionList";
 
 import uniqid from "../Helpers/uniqid";
 import shuffleArray from "../Helpers/shuffleArray";
@@ -40,24 +42,27 @@ const TeamSelectionScreen = ({ selected_pokemon, setTeam, setPokemon, navigation
         setTeam(team);
         setPokemon(selected_pokemon);
 
-        navigation.navigate("Battle", {
-            username: navigation.getParam("username")
-        });
+    };
+
+    const navigateTo = useNavigate();
+
+    const handleConfirm = () => {
+            navigateTo('/battle')
     };
 
     return (
         <div style={styles.container}>
-            <CustomText styles={[styles.headerText]}>Select your team</CustomText>
-
+            <CustomText styles={styles.headerText}>Select your team</CustomText>
+            {console.log(selected_pokemon)}
             {selected_pokemon.length === 6 && (
                 <div>
-                    <button style={styles.confirmButton} onClick={confirmTeam}>
+                    <button style={styles.confirmButton} onClick={handleConfirm}>
                         <CustomText>Confirm Selection</CustomText>
                     </button>
                 </div>
             )}
             <PokemonList
-                data={selected_pokemon}
+                data={pokemon_data}
                 numColumns={1}
                 action_type={"select-pokemon"}
             />

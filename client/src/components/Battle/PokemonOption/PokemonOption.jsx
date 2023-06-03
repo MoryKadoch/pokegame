@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton } from "@material-ui/core";
 import CustomText from "../CustomText";
-import { Entypo } from "@material-ui/icons";
+import { Check } from "@material-ui/icons";
 
 import { connect } from "react-redux";
 import { selectPokemon } from "../Actions";
@@ -31,12 +31,12 @@ const PokemonOption = ({ pokemon_data, is_selected, action_type, togglePokemon }
                     <Typography variant="body1" style={{ textTransform: "capitalize" }}>
                         {label}
                     </Typography>
-                    <IconButton color={is_selected ? "primary" : "default"} onPress={() => {
-                        if (action_type == "select-pokemon") {
-                            togglePokemon(id, pokemon_data, is_selected);
+                    <IconButton color={is_selected ? "primary" : "default"} onClick={() => {
+                        if (action_type === "select-pokemon") {
+                            togglePokemon(pokemon_data.id, pokemon_data, is_selected);
                         }
                     }}>
-                        <Entypo name="check" />
+                        <Check />
                     </IconButton>
                 </Grid>
             </CardContent>
