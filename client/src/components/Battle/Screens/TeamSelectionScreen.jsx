@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { setTeam, setPokemon } from "../Actions";
 import moves_data from "../Data/moves_data";
@@ -14,8 +14,12 @@ import uniqid from "../Helpers/uniqid";
 import shuffleArray from "../Helpers/shuffleArray";
 
 const TeamSelectionScreen = ({ selected_pokemon, setTeam, setPokemon, navigation }) => {
+    const location = useLocation();
+
     const confirmTeam = () => {
         let team = [...selected_pokemon]; // the array which stores the data for the Pokemon team selected by the user
+
+        console.log(location.state.username)
 
         team = team.map(item => {
             let hp = 500; // the total health points given to each Pokemon
@@ -42,12 +46,17 @@ const TeamSelectionScreen = ({ selected_pokemon, setTeam, setPokemon, navigation
         setTeam(team);
         setPokemon(selected_pokemon);
 
+        console.log("team: ", team)
+        console.log("pokemon: ", selected_pokemon)
+
+        handleConfirm(team);
+
     };
 
     const navigateTo = useNavigate();
 
-    const handleConfirm = () => {
-            navigateTo('/battle')
+    const handleConfirm = (team) => {
+        navigateTo('/battle', { state: { team } })
     };
 
     return (
@@ -56,7 +65,7 @@ const TeamSelectionScreen = ({ selected_pokemon, setTeam, setPokemon, navigation
             {console.log(selected_pokemon)}
             {selected_pokemon.length === 6 && (
                 <div>
-                    <button style={styles.confirmButton} onClick={handleConfirm}>
+                    <button style={styles.confirmButton} onClick={confirmTeam}>
                         <CustomText>Confirm Selection</CustomText>
                     </button>
                 </div>

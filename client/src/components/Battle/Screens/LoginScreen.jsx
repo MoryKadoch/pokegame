@@ -35,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
 
     const handleLogin = () => {
         if (username) {
-            navigateTo('/team-select', { username })
+            navigateTo('/battle', { state: { username } })
 
             if (backgroundSound) {
                 backgroundSound.pause();
