@@ -1,6 +1,12 @@
 import { SELECT_POKEMON } from "../Actions/types"
 import pokemon_data from "../Data/pokemon_data"
 
+import { connect } from "react-redux";
+
+import { setTeam, setPokemon } from "../Actions";
+import moves_data from "../Data/moves_data";
+
+
 const INITIAL_STATE = {
     pokemon: pokemon_data,
     selected_pokemon: []
@@ -31,6 +37,11 @@ export default (state = INITIAL_STATE, action) => {
             else {
                 selected_pokemon.push(action.pokemon_data)
             }
+
+            return { ...state, pokemon, selected_pokemon };
+
+        default:
+            return state;
             
     }
 }

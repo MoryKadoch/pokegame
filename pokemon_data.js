@@ -12789,5 +12789,3 @@ const pokemon_data = [
         "speed": 130
     }
 ]
-
-export default pokemon_data;

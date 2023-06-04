@@ -11,6 +11,8 @@ const PokemonList = ({
     action_type,
     opponents_channel
 }) => {
+    console.log(data);
+
     return (
         <Grid container spacing={2}>
             {data.map((item) => (
