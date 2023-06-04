@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography, Chip } from '@material-ui/core'
+import moves_data from './Battle/Data/moves_data.js'
 
 const MovesCard = ({ moves }) => {
     return (
@@ -10,7 +11,7 @@ const MovesCard = ({ moves }) => {
                 <Typography variant="body1">
                     {moves.map((move, i) => {
                         return (
-                            <Chip key={i} label={move.move.name} style={{ margin: '4px' }} />
+                            <Chip key={i} label={move.move.name} style={{ margin: '4px' }} color={moves_data[move.move.url.split('/')[6]] ? 'primary' : 'default'} />
                         )
                     })}
                 </Typography>
