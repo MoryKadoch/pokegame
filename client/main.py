@@ -547,6 +547,12 @@ def save_pokemon_data(pokemon_data):
         print(
             f'Getting type defenses for pokemon {pokemon["name"]} type {pokemon["types"][0]["type"]["name"]}')
         type_defenses = type_defenses_data[pokemon["types"][0]["type"]["name"]]
+        hp = pokemon["stats"][0]["base_stat"]
+        attack = pokemon["stats"][1]["base_stat"]
+        defense = pokemon["stats"][2]["base_stat"]
+        special_attack = pokemon["stats"][3]["base_stat"]
+        special_defense = pokemon["stats"][4]["base_stat"]
+        speed = pokemon["stats"][5]["base_stat"]
 
         # if cry file does not exist, download it from https://play.pokemonshowdown.com/audio/cries/
         cry_path = f'cries/{pokemon["name"]}.mp3'
@@ -611,7 +617,13 @@ def save_pokemon_data(pokemon_data):
             "sprite": pokemon["sprites"]["front_default"],
             "cry": f'./assets/sounds/cries/{pokemon["name"]}.mp3',
             "moves": move_ids,
-            "type_defenses": type_defenses
+            "type_defenses": type_defenses,
+            "hp": hp,
+            "attack": attack,
+            "defense": defense,
+            "special_attack": special_attack,
+            "special_defense": special_defense,
+            "speed": speed,
         })
 
         print(f'Pokemon {pokemon["name"]} done')

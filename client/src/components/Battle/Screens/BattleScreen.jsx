@@ -15,20 +15,22 @@ import shuffleArray from "../Helpers/shuffleArray";
 import { setOpponentTeam, setOpponentPokemon, setMove } from "../actions";
 import CustomText from "../CustomText.jsx";
 import HealthBar from "../HealthBar/HealthBar.jsx";
-
+import getMoveEffectivenessAndDamage from "../Helpers/getMoveEffectivenessAndDamage";
 
 const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
 
     const location = useLocation();
     const [opponentTeam, setOpposingTeam] = useState([])
+    const [opponentPokemon, setOpposingPokemon] = useState({})
     const [pokemon, setPokemon] = useState({})
     const [team, setTeam] = useState([{}])
     const [currentMenu, setCurrentMenu] = useState("main")
+    const [currentMessage, setCurrentMessage] = useState("")
 
     let favorites = JSON.parse(localStorage.getItem('favorites'))
-    console.log(favorites)
+    //console.log(favorites)
     favorites = favorites.map(item => {
-        console.log(item.moves)
+        //console.log(item.moves)
 
         item.moves = item.moves.filter(choosen_move => {
             if (choosen_move.chosen === true) {
@@ -37,6 +39,7 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
                         choosen_move.power = move.power
                         choosen_move.is_first = move.is_first
                         choosen_move.check = move.title
+                        choosen_move.type = move.type
                     }
                     return choosen_move
                 })
@@ -46,8 +49,10 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
 
         item.back = pokemon_data[item.id - 1].back
         item.front = pokemon_data[item.id - 1].front
-        item.current_hp = 500
-        item.total_hp = 500
+        item.current_hp = pokemon_data[item.id - 1].hp
+        item.total_hp = pokemon_data[item.id - 1].hp
+        item.speed = pokemon_data[item.id - 1].speed
+        item.type_defenses = pokemon_data[item.id - 1].type_defenses
 
         return item
     })
@@ -62,10 +67,11 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
             return random_pokemon_ids.indexOf(item.id) !== -1;
         });
 
-        console.log(opposing_team)
+        //console.log(opposing_team)
 
         opposing_team = opposing_team.map(item => {
-            let hp = 500;
+            let hp = pokemon_data[item.id - 1].hp;
+            let speed = pokemon_data[item.id - 1].speed;
 
             let shuffled_moves = shuffleArray(item.moves);
             let selected_moves = shuffled_moves.slice(0, 4);
@@ -78,55 +84,288 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
                 return selected_moves.indexOf(item.id) !== -1;
             });
 
+            let label = item.label;
             let member_id = uniqid();
 
             return {
                 ...item,
                 team_member_id: member_id,
+                name: label,
                 current_hp: hp,
                 total_hp: hp,
+                speed: speed,
                 moves: moves,
                 is_selected: false,
             };
         });
 
+
+
         // Mettez à jour le store avec l'équipe adverse et le Pokémon adverse actuel
 
-        console.log(opposing_team)
-
         setOpposingTeam(opposing_team)
-
         setTeam(favorites)
-        setPokemon(favorites[0])
 
-        setOpponentTeam(opposing_team);
-        setOpponentPokemon(opposing_team[0]);
+        setPokemon(favorites[0])
+        setOpposingPokemon(opposing_team[0])
+
+        console.log(opponentPokemon)
+
+        //setOpponentTeam(opposing_team);
+        //setOpponentPokemon(opposing_team[0]);
+
+        debutCombat(favorites[0], opposing_team[0])
+
+        //Message = `${opponentPokemon.label} est envoyé au combat.`
+        //showLetter(Message, 500*3)
+
+        //Message = "Que voulez-vous faire ?"
+        //showLetter(Message, 500*4)
+
+
     }, []);
 
+    const debutCombat = (pokemon, ennemyPokemon) => {
+        const waitTime = 350
+
+        let Message = "Un combat a commencé !"
+        showLetter(Message, waitTime)
+
+        console.log("combat: ", pokemon.name, " vs ", ennemyPokemon.label)
+
+        setTimeout(() => {
+            Message = `${pokemon.name} est envoyé au combat.`
+            showLetter(Message, waitTime)
+        }, waitTime * 6)
+
+        setTimeout(() => {
+            Message = `${ennemyPokemon.label} est envoyé au combat.`
+            showLetter(Message, waitTime)
+        }, waitTime * 15)
+
+        setTimeout(() => {
+            Message = "Que voulez-vous faire ?"
+            showLetter(Message, waitTime)
+        }, waitTime * 25)
+
+        //Message = "Que voulez-vous faire ?"
+        //showLetter(Message, 500*4)
+    }
+
     const SubMenuAttacks = () => {
-        console.log("subMenuAttacks: ", pokemon)
-        return(
+        //console.log("subMenuAttacks: ", pokemon)
+
+        return (
             <>
                 <div>
-                {pokemon.moves.map((move, i) => {
-                    if(i < 2)
-                    return(
-                    <button key={move.id}>{move.name}</button>)
-                })}
+                    {pokemon.moves.map((move, i) => {
+                        if (i < 2)
+                            return (
+                                <button key={move.id} onClick={() => handleAttack(move)}>{move.name}</button>)
+                    })}
                 </div>
                 <div>
-                {pokemon.moves.map((move, i) => {
-                    if (i >= 2)
-                        return (
-                            <button key={move.id}>{move.name}</button>)
-                })}
+                    {pokemon.moves.map((move, i) => {
+                        if (i >= 2)
+                            return (
+                                <button key={move.id} onClick={() => handleAttack(move)}>{move.name}</button>)
+                    })}
                 </div>
 
-        </>)
+            </>)
+    }
+
+    const getNextPokemon = () => {
+        let nextPokemon = team.filter(item => {
+            if (item.current_hp > 0) {
+                return item
+            }
+        })
+
+        if (nextPokemon.length === 0) {
+            setTimeout(() => {
+                let Message = "Vous n'avez plus de Pokémon en état de combattre."
+                showLetter(Message, 350)
+
+                setCurrentMenu("end")
+            }, 350 * 25)
+        }
+        else
+            setTimeout(() => {
+                setPokemon(nextPokemon[0])
+                let Message = `${nextPokemon[0].name} est envoyé au combat.`
+                showLetter(Message, 350)
+            }, 350 * 25)
+    }
+
+    function showLetter(text, delay) {
+        text.substring(0, 1);
+        for (var i = 2; i <= text.length; i++) {
+            (function (i) {
+                setTimeout(function () {
+                    setCurrentMessage(text.substring(0, i));
+                }, (delay = delay + 100));
+            })(i)
+        }
+    }
+
+    const getNextOpponentPokemon = () => {
+        let nextPokemon = opponentTeam.filter(item => {
+            if (item.current_hp > 0) {
+                return item
+            }
+        })
+
+        if (nextPokemon.length === 0) {
+            setTimeout(() => {
+                let Message = "Vous avez gagné !"
+                showLetter(Message, 350)
+                setCurrentMenu("end")
+            }, 350 * 25)
+        }
+
+        else
+            setTimeout(() => {
+                setOpposingPokemon(nextPokemon[0])
+                let Message = `${nextPokemon[0].label} est envoyé au combat.`
+                showLetter(Message, 350)
+            }, 350 * 25)
+    }
+
+    const attack = (move) => {
+        let power = getMoveEffectivenessAndDamage(move, opponentPokemon)
+        let Message = `${pokemon.name} attaque ${move.name} et inflige ${power.damage} points de dégâts.`
+        showLetter(Message, 350)
+
+        setTimeout(() => {
+            console.log(power.effectiveness)
+            Message = `${power.effectiveness}`
+            showLetter(Message, 350)
+        }, 350 * 7)
+
+        let life = opponentPokemon.current_hp - power.damage
+        let opponent = opponentPokemon
+        opponent.current_hp = life
+
+        if (opponent.current_hp <= 0) {
+            opponent.current_hp = 0
+        }
+
+        if (opponentPokemon.current_hp <= 0) {
+            setTimeout(() => {
+                console.log(power.effectiveness)
+                Message = `${opponentPokemon.name} est KO.`
+                showLetter(Message, 350)
+            }, 350 * 15)
+
+            getNextOpponentPokemon()
+
+        }
+
+        setCurrentMenu("main")
+
+        console.log(opponentPokemon)
+    }
+
+    const opponentAttack = () => {
+        let opponentMove = randomInt(0, opponentPokemon.moves.length)
+        console.log("choosed move: ", opponentPokemon.moves[opponentMove])
+
+        let power = getMoveEffectivenessAndDamage(opponentPokemon.moves[opponentMove], pokemon)
+
+        let Message = `${opponentPokemon.label} attaque ${opponentPokemon.moves[opponentMove].title} et inflige ${power.damage} points de dégâts.`
+        showLetter(Message, 350)
+
+        setTimeout(() => {
+            console.log(power.effectiveness)
+            Message = `${power.effectiveness}`
+            showLetter(Message, 350)
+        }, 350 * 7)
+
+        let life = pokemon.current_hp - power.damage
+        let opponent = pokemon
+        opponent.current_hp = life
+
+        if (opponent.current_hp <= 0) {
+            opponent.current_hp = 0
+        }
+
+        if (pokemon.current_hp <= 0) {
+            setTimeout(() => {
+                console.log(power.effectiveness)
+                Message = `${pokemon.name} est KO.`
+                showLetter(Message, 350)
+            }, 350 * 15)
+
+            getNextPokemon()
+        }
+    }
+
+
+    const handleAttack = (move) => {
+        let opponentMove = randomInt(0, opponentPokemon.moves.length)
+        console.log("choosed move: ", opponentPokemon.moves[opponentMove])
+
+        let power = getMoveEffectivenessAndDamage(move, opponentPokemon)
+
+        let power_opponent = getMoveEffectivenessAndDamage(opponentPokemon.moves[opponentMove], pokemon)
+
+        if (move.is_first === true) {
+            attack(move)
+            setTimeout(() => {
+
+                opponentAttack()
+            }, 350 * 25)
+        }
+        else if (pokemon.speed > opponentPokemon.speed) {
+            attack(move)
+            setTimeout(() => {
+                opponentAttack()
+            }, 350 * 25)
+        }
+
+        else {
+            console.log("damage: ", power_opponent.damage)
+            let Message = `${opponentPokemon.label} attaque ${opponentPokemon.moves[opponentMove].title}`
+            //et inflige ${ power_opponent.damage } points de dégâts.`
+            showLetter(Message, 350)
+
+            setTimeout(() => {
+                console.log(power_opponent.effectiveness)
+                Message = `${power_opponent.effectiveness}`
+                showLetter(Message, 350)
+            }, 350 * 7)
+
+            let life = pokemon.current_hp - power_opponent.damage
+            let playerPokemon = pokemon
+            playerPokemon.current_hp = life
+
+            if (playerPokemon.current_hp <= 0) {
+                playerPokemon.current_hp = 0
+            }
+
+            setPokemon(playerPokemon)
+
+            if (pokemon.current_hp <= 0) {
+                setTimeout(() => {
+                    console.log(power_opponent.effectiveness)
+                    Message = `${pokemon.name} est KO.`
+                    showLetter(Message, 350)
+
+                }, 350 * 15)
+
+                getNextPokemon()
+
+            }
+
+            setCurrentMenu("main")
+
+            console.log("attack: ", pokemon)
+        }
     }
 
     const SubMenuSwitchPokemon = () => {
-        console.log("subMenuSwitchPokemon: ", team)
+        //console.log("subMenuSwitchPokemon: ", team)
         return (
             <>
 
@@ -139,12 +378,13 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
                         </div>
                     )
                 })}
-            </>)
+            </>
+        )
     }
 
     const handleClick = (index) => {
-        console.log("index: ", index)
-        console.log(pokemon)
+        //console.log("index: ", index)
+        //console.log(pokemon)
         switch (index) {
             case 0:
                 setCurrentMenu("attacks")
@@ -175,11 +415,16 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
         )
     }
 
+    const Answers = () => {
+
+        return (
+            <div> {currentMessage} </div>)
+    }
+
     const BattleScreen = ({
         team,
         move,
         move_display_text,
-        pokemon,
         opponent_pokemon,
         backToMove
     }) => {
@@ -187,20 +432,21 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
             
             <div >
                 
-                <CustomText>Fight!</CustomText>
-                {console.log("battle team: ", team)}
-                {console.log("opponent team: ", opponentTeam)}
-                {console.log("opponent pokemon: ", opponent_pokemon)}
+                
+                {/*{console.log("battle team: ", team)}*/}
+                {/*{console.log("opponent team: ", opponentTeam)}*/}
+                {/*{console.log("opponent pokemon: ", opponentPokemon)}*/}
 
                 <div>
                     {/* Code pour rendre l'interface utilisateur du Pokémon et du Pokémon adverse */}
-                    {currentMenu !== "switch" &&
+                    {currentMenu !== "switch" && currentMenu !== "end" &&
                 
                     <div>
                         <div>
-                            <HealthBar label={opponent_pokemon.label} currentHealth={opponent_pokemon.current_hp} totalHealth={opponent_pokemon.total_hp} />
-                            <img src={opponent_pokemon.front} alt={opponent_pokemon.label} />
-                        </div>
+                                <HealthBar label={opponentPokemon.label} currentHealth={opponentPokemon.current_hp} totalHealth={opponentPokemon.total_hp} />
+                                <img src={opponentPokemon.front} alt={opponentPokemon.label} />
+                            </div>
+                            {/*<CustomText>Fight!</CustomText>*/}
                         <div>
                             <HealthBar label={pokemon.name} currentHealth={pokemon.current_hp} totalHealth={pokemon.total_hp} />
                             <img src={pokemon.back} alt={pokemon.name} />
@@ -213,10 +459,14 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
                 <div >
                     {/* Code pour ajouter l'interface utilisateur des contrôles de combat */}
                     <div>
-                        {currentMenu === "main" && <Menu />}   
-                        {currentMenu === "attacks" && <SubMenuAttacks />}
-                        {currentMenu === "switch" && <SubMenuSwitchPokemon />}
-                        <button onClick={() => setCurrentMenu("main") }>Back</button>
+                        <Answers />
+                    </div>
+
+                    <div>
+                        {currentMenu === "main" && currentMenu !== "end" && <Menu />}   
+                        {currentMenu === "attacks" && currentMenu !== "end" && <SubMenuAttacks />}
+                        {currentMenu === "switch" && currentMenu !== "end" && <SubMenuSwitchPokemon />}
+                        {currentMenu !== "main" && currentMenu !== "end" && <button onClick={() => setCurrentMenu("main") }>Back</button>}
                     </div>
                 </div>
             </div>
@@ -226,7 +476,7 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
     return (
         <Box display="flex" alignItems="center" justifyContent="center">
             <Typography variant="h6">Battle Screen</Typography>
-            {opponentTeam.length === 0 ? <div>loading...</div> : <BattleScreen team={favorites} pokemon={favorites[0]} opponent_pokemon={opponentTeam[0]} /> }
+            {opponentTeam.length === 0 ? <div>loading...</div> : <BattleScreen team={favorites} /> }
             
         </Box>
     );
