@@ -7,8 +7,10 @@ const Favorites = () => {
     const [favorites, setFavorites] = useState([])
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false);
+    const [currentPokemon, setCurrentPokemon] = useState(null);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (pokemon) => {
+        setCurrentPokemon(pokemon);
         setOpen(true);
     };
 
@@ -55,6 +57,7 @@ const Favorites = () => {
             return favorite
         })
         localStorage.setItem('favorites', JSON.stringify(newFavoriteList))
+        setCurrentPokemon(newFavoriteList.find((favorite) => favorite.id === pokemon.id))
         setFavorites(newFavoriteList)
     }
 
@@ -103,23 +106,23 @@ const Favorites = () => {
                                             </Button>
                                             {pokemon.moves.length > 0 && (
                                                 <div>
-                                                    <Button variant="contained" color="primary" onClick={handleClickOpen} style={{ marginLeft: '16px' }}>
+                                                    <Button variant="contained" color="primary" onClick={() => handleClickOpen(pokemon)} style={{ marginLeft: '16px' }}>
                                                         Choose Moves
                                                     </Button>
                                                     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
                                                         <DialogTitle>
                                                             <Typography variant="h5" style={{ textAlign: 'center' }}>
-                                                                Choose 4 moves for {pokemon.name}
+                                                                Choose 4 moves for {currentPokemon?.name}
                                                             </Typography>
                                                         </DialogTitle>
                                                         <DialogContent>
                                                             <Grid container spacing={2}>
-                                                                {pokemon.moves.map((move, i) => (
+                                                                {currentPokemon?.moves.map((move, i) => (
                                                                     <Grid item xs={12} sm={6} md={4} key={i}>
                                                                         <Checkbox
                                                                             value={move.name}
                                                                             {...(move.chosen ? { checked: true } : { checked: false })}
-                                                                            onChange={(e) => handleMoveChange(e, move, pokemon)}
+                                                                            onChange={(e) => handleMoveChange(e, move, currentPokemon)}
                                                                         />
                                                                         <ListItemText primary={move.name} />
                                                                     </Grid>
@@ -129,7 +132,6 @@ const Favorites = () => {
                                                     </Dialog>
                                                 </div>
                                             )}
-
                                         </CardActions>
                                     </Card>
                                 </Grid>
