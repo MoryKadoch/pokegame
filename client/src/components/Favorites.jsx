@@ -114,6 +114,9 @@ const Favorites = () => {
                                                             <Typography variant="h5" style={{ textAlign: 'center' }}>
                                                                 Choose 4 moves for {currentPokemon?.name}
                                                             </Typography>
+                                                            <Button onClick={handleClose} style={{ position: 'absolute', right: '8px', top: '8px', fontWeight: 'bold', borderRadius: '50%', minWidth: '0px', width: '32px', height: '32px', backgroundColor: 'grey', color: 'white' }}>
+                                                                X
+                                                            </Button>
                                                         </DialogTitle>
                                                         <DialogContent>
                                                             <Grid container spacing={2}>

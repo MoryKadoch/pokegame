@@ -16,6 +16,15 @@ const MovesCard = ({ moves }) => {
                     })}
                 </Typography>
             </CardContent>
+            <CardContent style={{ textAlign: 'center' }}>
+                <Typography variant="body1">
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                        Legend:
+                    </Typography>
+                    <Chip label="Selectable for Battle" style={{ margin: '4px' }} color="primary" />
+                    <Chip label="Not Selectable for Battle" style={{ margin: '4px' }} color="default" />
+                </Typography>
+            </CardContent>
         </Card>
     )
 }
