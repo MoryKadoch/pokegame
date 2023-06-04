@@ -15,7 +15,7 @@ const HealthBar = ({ label, currentHealth, totalHealth }) => {
     return (
         <Grid container direction="column" alignItems="flex-start" spacing={1}>
             <Grid item>
-                <Typography style={styles.label}>{label}</Typography>
+                <Typography style={styles.label} variant="h6">{label}</Typography>
             </Grid>
             <Grid item>
                 <div style={styles.container}>

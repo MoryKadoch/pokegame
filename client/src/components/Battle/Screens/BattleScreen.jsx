@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@material-ui/core";
-
+import { Grid, Card, CardContent, CardMedia, Button, Typography, CardActions, Box } from '@material-ui/core';
 import { connect } from "react-redux";
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -12,7 +11,7 @@ import uniqid from "../Helpers/uniqid";
 import randomInt from "../Helpers/randomInt";
 import shuffleArray from "../Helpers/shuffleArray";
 
-import { setOpponentTeam, setOpponentPokemon, setMove } from "../actions";
+import { setOpponentTeam, setOpponentPokemon, setMove } from "../Actions";
 import CustomText from "../CustomText.jsx";
 import HealthBar from "../HealthBar/HealthBar.jsx";
 import getMoveEffectivenessAndDamage from "../Helpers/getMoveEffectivenessAndDamage";
@@ -153,26 +152,22 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
     }
 
     const SubMenuAttacks = () => {
-        //console.log("subMenuAttacks: ", pokemon)
-
         return (
-            <>
-                <div>
-                    {pokemon.moves.map((move, i) => {
-                        if (i < 2)
-                            return (
-                                <button key={move.id} onClick={() => handleAttack(move)}>{move.name}</button>)
-                    })}
-                </div>
-                <div>
-                    {pokemon.moves.map((move, i) => {
-                        if (i >= 2)
-                            return (
-                                <button key={move.id} onClick={() => handleAttack(move)}>{move.name}</button>)
-                    })}
-                </div>
-
-            </>)
+            <Grid container spacing={2}>
+                {pokemon.moves.map((move, i) => (
+                    <Grid item xs={6} key={move.id}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            onClick={() => handleAttack(move)}
+                        >
+                            {move.name}
+                        </Button>
+                    </Grid>
+                ))}
+            </Grid>
+        )
     }
 
     const getNextPokemon = () => {
@@ -372,9 +367,9 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
                 {team.map((pokemon) => {
                     return (
                         <div key={pokemon.id}>
-                            <img src={pokemon.front} key={pokemon.id} alt={pokemon.name} /> 
+                            <img src={pokemon.front} key={pokemon.id} alt={pokemon.name} />
                             <HealthBar label={pokemon.name} currentHealth={pokemon.current_hp} totalHealth={pokemon.total_hp} />
-                            <button >{pokemon.name}</button>
+                            <Button variant="contained" color="primary" fullWidth>{pokemon.name}</Button>
                         </div>
                     )
                 })}
@@ -401,17 +396,20 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
 
     const Menu = () => {
         return (
-            <>
-                <div>
-                    <button onClick={() => handleClick(0)}>Attaques</button>
-                    <button onClick={() => handleClick(1)}>Objets</button>
-                </div>
-                <div>
-                    <button onClick={() => handleClick(2)}>Pokémon</button>
-                    <button onClick={() => handleClick(3)}>Fuite</button>
-                </div>
-                
-            </>
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => handleClick(0)}>Attaques</Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => handleClick(1)}>Objets</Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => handleClick(2)}>Pokémon</Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => handleClick(3)}>Fuite</Button>
+                </Grid>
+            </Grid>
         )
     }
 
@@ -429,44 +427,44 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
         backToMove
     }) => {
         return (
-            
-            <div >
-                
-                
+
+            <div style={{ width: "70%", margin: "0 auto", backgroundColor: "#f2f2f2", padding: "10px", borderRadius: "10px", marginBottom: "20px", marginTop: "20px" }}>
+
+
                 {/*{console.log("battle team: ", team)}*/}
                 {/*{console.log("opponent team: ", opponentTeam)}*/}
                 {/*{console.log("opponent pokemon: ", opponentPokemon)}*/}
 
-                <div>
+                <div style={{ width: "70%", margin: "0 auto" }}>
                     {/* Code pour rendre l'interface utilisateur du Pokémon et du Pokémon adverse */}
                     {currentMenu !== "switch" && currentMenu !== "end" &&
-                
-                    <div>
+
                         <div>
-                                <HealthBar label={opponentPokemon.label} currentHealth={opponentPokemon.current_hp} totalHealth={opponentPokemon.total_hp} />
+                            <div style={{ textAlign: "right", float: "right", padding: "10px", borderRadius: "10px" }}>
+                                <HealthBar label={opponentPokemon.label.toUpperCase()} currentHealth={opponentPokemon.current_hp} totalHealth={opponentPokemon.total_hp} />
                                 <img src={opponentPokemon.front} alt={opponentPokemon.label} />
                             </div>
                             {/*<CustomText>Fight!</CustomText>*/}
-                        <div>
-                            <HealthBar label={pokemon.name} currentHealth={pokemon.current_hp} totalHealth={pokemon.total_hp} />
-                            <img src={pokemon.back} alt={pokemon.name} />
-                        </div>
+                            <div>
+                                <HealthBar label={pokemon.name.toUpperCase()} currentHealth={pokemon.current_hp} totalHealth={pokemon.total_hp} />
+                                <img src={pokemon.back} alt={pokemon.name} />
+                            </div>
 
                         </div>
                     }
                 </div>
 
-                <div >
+                <div style={{ width: "70%", margin: "0 auto", marginTop: "10%", marginBottom: "10%" }}>
                     {/* Code pour ajouter l'interface utilisateur des contrôles de combat */}
                     <div>
                         <Answers />
                     </div>
 
                     <div>
-                        {currentMenu === "main" && currentMenu !== "end" && <Menu />}   
+                        {currentMenu === "main" && currentMenu !== "end" && <Menu />}
                         {currentMenu === "attacks" && currentMenu !== "end" && <SubMenuAttacks />}
                         {currentMenu === "switch" && currentMenu !== "end" && <SubMenuSwitchPokemon />}
-                        {currentMenu !== "main" && currentMenu !== "end" && <button onClick={() => setCurrentMenu("main") }>Back</button>}
+                        {currentMenu !== "main" && currentMenu !== "end" && <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => setCurrentMenu("main")}>Back</Button>}
                     </div>
                 </div>
             </div>
@@ -475,9 +473,8 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center">
-            <Typography variant="h6">Battle Screen</Typography>
-            {opponentTeam.length === 0 ? <div>loading...</div> : <BattleScreen team={favorites} /> }
-            
+            {opponentTeam.length === 0 ? <div>loading...</div> : <BattleScreen team={favorites} />}
+
         </Box>
     );
 };
