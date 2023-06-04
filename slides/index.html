@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Le Pokédex en ReactJS</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Le Pokédex en ReactJS</h1>
+					<h3>Un projet par Mory Kadoch et Joris Monteillet</h3>
+				</section>
+				<section>
+					<h2>Introduction</h2>
+					<p>Ce projet, réalisé en ReactJS (Vite), est un Pokédex interactif qui permet aux utilisateurs de naviguer et de chercher des informations sur divers Pokémons.
+					<br>Un jeu de combat est également disponible, permettant aux utilisateurs de faire combattre son équipe de Pokémons contre l'ordinateur.</p>
+					</p>
+				</section>
+				<section>
+					<h2>Planification et travail collaboratif</h2>
+					<p>Nous avons utilisé Git et GitHub pour le travail collaboratif et la gestion des versions. Avec une planification efficace et une répartition claire des tâches, nous avons pu travailler simultanément sur différents aspects du projet.</p>
+					<a href="https://github.com/MoryKadoch/pokegame">Lien vers le répo Github</a>
+				</section>
+				<section>
+					<h2>Technologies/Packages utilisés</h2>
+					<ul>
+						<li>ReactJS</li>
+						<li>axios pour les requêtes HTTP,</li>
+						<li>@material-ui/core et @material-ui/icons pour des composants d'interface utilisateur,</li>
+						<li>react-router-dom pour la gestion des routes,</li>
+						<li>@mui/icons-material et @mui/material pour des icônes et composants supplémentaires.</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Le Pokédex</h2>
+					<p>Notre Pokédex est maintenant en ligne et prêt à être exploré. Nous vous invitons à le découvrir et à partager votre expérience.</p>
+					<a href="https://pokegame.kadoch.dev/">Lien vers le Pokédex</a>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
