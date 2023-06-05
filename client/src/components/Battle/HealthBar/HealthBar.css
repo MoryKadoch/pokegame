@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "PKMN_RBYGSC";
+    src: local("PKMN_RBYGSC"), url("../../../assets/PKMN_RBYGSC.ttf") format("truetype");
+    font-weight: bold;
+}
+
+.font-face-gm {
+    font-family: "PKMN_RBYGSC";
+}

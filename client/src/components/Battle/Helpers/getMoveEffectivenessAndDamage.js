@@ -1,7 +1,7 @@
-const effectiveness_chart = {
+ï»¿const effectiveness_chart = {
     "0": "Cela n'a aucun effet.",
-    "0.25": "Ce n'est pas très efficace.",
-    "0.5": "Ce n'est pas très efficace.",
+    "0.25": "Ce n'est pas trÃ¨s efficace.",
+    "0.5": "Ce n'est pas trÃ¨s efficace.",
     "1": "",
     "2": "C'est super efficace !",
     "4": "C'est super efficace !"

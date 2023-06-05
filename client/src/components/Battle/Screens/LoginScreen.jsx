@@ -7,27 +7,6 @@ const LoginScreen = () => {
     const [backgroundSound, setBackgroundSound] = useState(null);
     const navigateTo = useNavigate();
 
-    useEffect(() => {
-        const loadBackgroundSound = async () => {
-            try {
-                const sound = new Audio(require("../assets/sounds/background/opening.mp3"));
-                sound.loop = true;
-                await sound.play();
-                setBackgroundSound(sound);
-            } catch (error) {
-                console.log("Error loading background sound:", error);
-            }
-        };
-
-        loadBackgroundSound();
-
-        return () => {
-            if (backgroundSound) {
-                backgroundSound.pause();
-            }
-        };
-    }, []);
-
     const handleLogin = () => {
         if (username) {
             navigateTo('/battle', { state: { username } })
