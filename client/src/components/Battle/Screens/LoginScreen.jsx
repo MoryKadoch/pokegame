@@ -17,6 +17,21 @@ const LoginScreen = () => {
     };
 
     return (
+        <>
+        { JSON.parse(localStorage.getItem('favorites'))?.length === 0 ? (
+            <Grid container spacing={2} style={{ padding: '24px', height: '80vh' }}>
+                <Grid item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Box style={{ width: '100%', maxWidth: 600, textAlign: 'center' }}>
+                        <Typography variant="h6" component="h2">
+                            You have no Pokémon on your team! You can't battle without Pokémon!
+                        </Typography>
+                        <Button onClick={() => navigateTo('/')} variant="contained" color="primary" style={{ width: '100%' }} size="large">
+                            Go to Pokédex
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
+        ) : (
         <Grid container spacing={2} style={{ padding: '24px', height: '80vh' }}>
             <Grid item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Box style={{ width: '100%', maxWidth: 600, textAlign: 'center' }}>
@@ -43,6 +58,8 @@ const LoginScreen = () => {
                 </Box>
             </Grid>
         </Grid>
+        )}
+        </>
     );
 };
 
