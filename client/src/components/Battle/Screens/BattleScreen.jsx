@@ -97,7 +97,7 @@ const BattleScreen = ({ setOpponentTeam, setOpponentPokemon }) => {
 
         const random_pokemon_ids = [];
         for (let x = 0; x <= 5; x++) {
-            random_pokemon_ids.push(randomInt(1, 54));
+            random_pokemon_ids.push(randomInt(1, 150));
         }
 
         let opposing_team = pokemon_data.filter(item => {
