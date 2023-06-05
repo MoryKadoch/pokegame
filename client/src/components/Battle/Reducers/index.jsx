@@ -10,14 +10,4 @@ const rootReducer = combineReducers({
     battle: BattleReducer
 });
 
-const store = createStore(rootReducer);
-
-const Root = () => {
-    return (
-        <Provider store={store}>
-            <RootStack />
-        </Provider>
-    );
-};
-
-export default Root;
+export default rootReducer

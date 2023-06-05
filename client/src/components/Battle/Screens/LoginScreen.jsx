@@ -1,12 +1,18 @@
-﻿import { useState } from 'react';
-import { Grid, Card, CardContent, Typography, Button, TextField, CardActions, Box } from '@material-ui/core';
+﻿import React, { useState, useEffect } from "react";
+import { Grid, Typography, TextField, Button, Box } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
 
 const LoginScreen = () => {
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState("");
+    const [backgroundSound, setBackgroundSound] = useState(null);
+    const navigateTo = useNavigate();
 
-    const login = () => {
+    const handleLogin = () => {
         if (username) {
-            // TODO: Implement navigation logic
+            navigateTo('/battle', { state: { username } })
+            if (backgroundSound) {
+                backgroundSound.pause();
+            }
         }
     };
 
@@ -26,7 +32,7 @@ const LoginScreen = () => {
                             onChange={(e) => setUsername(e.target.value)}
                             style={{ marginTop: 16, marginBottom: 16, width: '100%' }}
                         />
-                        <Button onClick={login} variant="contained" color="primary" style={{ width: '100%' }} size="large">
+                        <Button onClick={handleLogin} variant="contained" color="primary" style={{ width: '100%' }} size="large">
                             Login
                         </Button>
                     </Box>
@@ -34,8 +40,6 @@ const LoginScreen = () => {
             </Grid>
         </Grid>
     );
-
-
 };
 
 export default LoginScreen;

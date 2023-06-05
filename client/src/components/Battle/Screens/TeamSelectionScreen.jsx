@@ -1,30 +1,80 @@
 import React from "react";
 import { connect } from "react-redux";
+import { useNavigate, useLocation } from 'react-router-dom';
 
-import { setTeam, setPokemon } from "../actions";
-import moves_data from "../data/moves_data";
+import { setTeam, setPokemon } from "../Actions";
+import moves_data from "../Data/moves_data";
+import pokemon_data from "../Data/pokemon_data";
 
-import CustomText from "../components/CustomText";
-import PokemonList from "../components/PokemonList";
-import ActionList from "../components/ActionList";
+import CustomText from "../CustomText";
+import PokemonList from "../PokemonList";
+import ActionList from "../ActionList";
 
-import uniqid from "../helpers/uniqid";
-import shuffleArray from "../helpers/shuffleArray";
+import uniqid from "../Helpers/uniqid";
+import shuffleArray from "../Helpers/shuffleArray";
 
-const TeamSelectionScreen = ({ selected_pokemon, setTeam, setCurrentPokemon }) => {
+const TeamSelectionScreen = ({ selected_pokemon, setTeam, setPokemon, navigation }) => {
+    const location = useLocation();
+
     const confirmTeam = () => {
-        /*
-        todo:
-        - extract selected pokemon, function for setting the team, and function for setting current Pokemon from props
-        - construct an array containing the Pokemon data for the selected team
-        - dispatch action for setting team
-        - dispatch action for setting current Pokemon
-        */
+        let team = [...selected_pokemon]; // the array which stores the data for the Pokemon team selected by the user
+
+        console.log(location.state.username)
+
+        team = team.map(item => {
+            let hp = 500; // the total health points given to each Pokemon
+
+            let shuffled_moves = shuffleArray(item.moves);
+            let selected_moves = shuffled_moves.slice(0, 4);
+
+            let moves = moves_data.filter(item => {
+                return selected_moves.indexOf(item.id) !== -1;
+            });
+
+            let member_id = uniqid();
+
+            return {
+                ...item,
+                team_member_id: member_id, // unique ID for identifying each Pokemon in the team
+                current_hp: hp, // current HP. This gets updated when an opponent Pokemon attacks
+                total_hp: hp,
+                moves: moves,
+                is_selected: false // no longer needed
+            };
+        });
+
+        setTeam(team);
+        setPokemon(selected_pokemon);
+
+        console.log("team: ", team)
+        console.log("pokemon: ", selected_pokemon)
+
+        handleConfirm(team);
+
+    };
+
+    const navigateTo = useNavigate();
+
+    const handleConfirm = (team) => {
+        navigateTo('/battle', { state: { team } })
     };
 
     return (
         <div style={styles.container}>
-            <CustomText>Team Selection Screen</CustomText>
+            <CustomText styles={styles.headerText}>Select your team</CustomText>
+            {console.log(selected_pokemon)}
+            {selected_pokemon.length === 6 && (
+                <div>
+                    <button style={styles.confirmButton} onClick={confirmTeam}>
+                        <CustomText>Confirm Selection</CustomText>
+                    </button>
+                </div>
+            )}
+            <PokemonList
+                data={pokemon_data}
+                numColumns={1}
+                action_type={"select-pokemon"}
+            />
         </div>
     );
 };
@@ -70,12 +120,5 @@ const styles = {
         alignSelf: "center",
         marginBottom: 10,
         backgroundColor: "#95ff84",
-    },
-    loadingContainer: {
-        alignItems: "center",
-    },
-    messageText: {
-        fontSize: 13,
-        color: "#676767",
     },
 };
